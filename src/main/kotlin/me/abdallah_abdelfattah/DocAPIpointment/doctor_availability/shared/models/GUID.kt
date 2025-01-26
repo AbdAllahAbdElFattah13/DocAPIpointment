@@ -5,6 +5,7 @@ import java.util.UUID
 data class GUID(val value: String = UUID.randomUUID().toString()) {
 
     init {
+        require(value.isNotBlank()) { "GUID cannot be blank" }
         require(value.isValidUUID()) { "Invalid UUID: $value" }
     }
 
