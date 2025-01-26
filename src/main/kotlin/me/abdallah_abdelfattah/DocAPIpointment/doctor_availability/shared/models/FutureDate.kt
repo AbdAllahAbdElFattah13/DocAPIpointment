@@ -4,16 +4,15 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-data class FutureDate(val dateTimeString: String) {
+data class FutureDate(
+    val dateTimeString: String,
+    private val now: LocalDateTime = LocalDateTime.now(),
+) {
     private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d/M/yyyy H:mm")
+    val dateTime: LocalDateTime = dateTimeString.toDateTimeWithFormat(formatter)
 
     init {
-        val dateTime: LocalDateTime = dateTimeString.toDateTimeWithFormat(formatter)
-        require(isFuture(dateTime)) { "Date must be in the future: $dateTimeString" }
-    }
-
-    private fun isFuture(date: LocalDateTime): Boolean {
-        return date.isAfter(LocalDateTime.now())
+        require(dateTime.isAfter(now)) { "Date must be in the future: $dateTimeString" }
     }
 }
 
