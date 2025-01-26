@@ -12,11 +12,7 @@ data class Cost(private val rawValue: String) {
             val number = input.toDoubleOrNull()
                 ?: throw IllegalArgumentException("Invalid number format: $input")
 
-            require(number < 0) {"Cost cannot be negative: $input"}
-
-            if (number % 1.0 == 0.0) {
-                return number.toLong().toString()
-            }
+            require(number > 0) {"Cost cannot be negative: $input"}
 
             return "%.2f".format(number)
         } catch (e: NumberFormatException) {

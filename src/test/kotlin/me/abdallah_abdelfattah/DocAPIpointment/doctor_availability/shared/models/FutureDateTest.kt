@@ -16,7 +16,7 @@ class FutureDateTest {
     )
 
     @Test
-    fun `Date must be in the future`(){
+    fun `Date must be in the future`() {
         assertThrows(IllegalArgumentException::class.java){
             FutureDate("22/1/2020 12:00")
         }
