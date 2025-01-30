@@ -22,7 +22,7 @@ class CreateDoctorSlotController(
 
         service.addDoctorSlot(
             doctorId = doctorId,
-            slotStartDateTimeValue = request.slotStartDateTime,
+            slotStartEpochTime = request.slotStartDateTime,
             costValue = request.cost,
         )
 

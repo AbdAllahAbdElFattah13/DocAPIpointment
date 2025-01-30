@@ -1,20 +1,25 @@
 package me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.models
 
+import me.abdallah_abdelfattah.DocAPIpointment.shared.futureDateEpoch
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.FutureDate
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.GUID
+import me.abdallah_abdelfattah.DocAPIpointment.shared.nowEpoch
 import org.junit.jupiter.api.Assertions.*
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import java.time.Clock
+import java.time.Instant
 import kotlin.test.Test
 
 class SlotTest {
 
-    private val dateTimeString = "22/1/2023 12:00"
-    private val now = LocalDateTime.parse(
-        "21/1/2023 09:00",
-        DateTimeFormatter.ofPattern("d/M/yyyy H:mm")
+    private val clock: Clock = mock {
+        on(it.instant()) doReturn (Instant.ofEpochMilli(nowEpoch))
+    }
+    private val time = FutureDate.fromEpochMillis(
+        futureDateEpoch,
+        clock,
     )
-    private val time = FutureDate(dateTimeString, now)
 
     @Test
     fun `reserve should return a new Slot with isReserved set to true`() {
@@ -40,13 +45,10 @@ class SlotTest {
             durationInMinutes = 60
         )
 
-        val endDateTime = slot.endDateTime
+        val endDateTime = slot.endEpochMillis
 
         assertEquals(
-            LocalDateTime.parse(
-                "22/1/2023 13:00",
-                DateTimeFormatter.ofPattern("d/M/yyyy H:mm")
-            ),
+            time.epochMillis + 60 * 60 * 1000,
             endDateTime
         )
     }

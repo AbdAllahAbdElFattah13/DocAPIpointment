@@ -1,53 +1,47 @@
 package me.abdallah_abdelfattah.DocAPIpointment.shared.models
 
-import me.abdallah_abdelfattah.DocAPIpointment.shared.models.FutureDate
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import java.time.Clock
+import java.time.Instant
 
 class FutureDateTest {
-
-    private val pattern = "d/M/yyyy H:mm"
-    private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern(pattern)
-
-    private val now = LocalDateTime.parse(
-        "21/1/2023 09:00",
-        DateTimeFormatter.ofPattern("d/M/yyyy H:mm")
-    )
 
     @Test
     fun `Date must be in the future`() {
         assertThrows(IllegalArgumentException::class.java){
-            FutureDate("22/1/2020 12:00")
+            "22/1/2020 12:00".toFutureDate()
         }
     }
 
     @Test
     fun `FutureDate will throw an exception if the date is not in the correct format`(){
         assertThrows(IllegalArgumentException::class.java) {
-            FutureDate("22-1-2023 12:00")
+            "22-1-2023 12:00".toFutureDate()
         }
     }
 
     @Test
     fun `FutureDate will throw an exception if the date is not in the correct format 2`(){
         assertThrows(IllegalArgumentException::class.java) {
-            FutureDate("Invalid date format")
+            "Invalid date format".toFutureDate()
         }
     }
 
     @Test
     fun `FutureDate works fine with future dates`() {
-        val dateTimeString = "22/1/2023 12:00"
-        assertDoesNotThrow{
-            val futureDate = FutureDate(dateTimeString, now)
-            assertEquals(dateTimeString, futureDate.dateTimeString)
-            assertEquals(
-                LocalDateTime.parse(dateTimeString, formatter),
-                futureDate.dateTime,
-            )
 
+        val nowEpoch = 1674422400000 //"22/1/2023 12:00"
+        val futureEpoch = 1738260746000 //"30/1/2025 18:12"
+
+        val clock = mock<Clock> {
+            on { instant() } doReturn Instant.ofEpochMilli(nowEpoch)
+        }
+
+        assertDoesNotThrow {
+            FutureDate.fromEpochMillis(futureEpoch, clock)
         }
     }
 

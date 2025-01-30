@@ -10,7 +10,7 @@ class SlotMapper {
     fun toResponseSlot(slot: Slot): ResponseSlot {
         return ResponseSlot(
             id=slot.id.value,
-            time=slot.time.dateTimeString,
+            time=slot.time.epochMillis.toString(),
             durationInMinutes = slot.durationInMinutes,
             isReserved = slot.isReserved,
             cost = slot.cost.value,

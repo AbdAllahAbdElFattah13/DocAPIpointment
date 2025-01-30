@@ -9,15 +9,12 @@ import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.mode
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.repository.DoctorSlotRepository
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.FutureDate
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.GUID
-import me.abdallah_abdelfattah.DocAPIpointment.shared.time_provider.TimeProvider
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 @Service
 class DefaultDoctorAvailabilityService(
     private val doctorSlotRepository: DoctorSlotRepository,
     private val slotMapper: SlotMapper,
-    private val timeProvider: TimeProvider,
 ) : DoctorAvailabilityService {
 
     override fun getDoctorAvailability(doctorId: String): GetDoctorAvailabilityServiceResponse {
@@ -33,23 +30,16 @@ class DefaultDoctorAvailabilityService(
 
     override fun addDoctorSlot(
         doctorId: String,
-        slotStartDateTimeValue: String,
+        slotStartEpochTime: String,
         costValue: String,
         ) {
         val doctor = getDoctor(doctorId)
-        val futureStartDate = FutureDate(
-            dateTimeString = slotStartDateTimeValue,
-            now = LocalDateTime.ofEpochSecond(
-                timeProvider.now(),
-                0,
-                timeProvider.zoneOffset()
-            )
-        )
+        val time = FutureDate.fromEpochMillis(slotStartEpochTime)
         val cost = Cost(costValue)
 
         val slot = Slot(
             doctorId = doctor.id,
-            time = futureStartDate,
+            time = time,
             cost = cost
         )
 
@@ -66,12 +56,12 @@ class DefaultDoctorAvailabilityService(
         newSlot: Slot,
     ) {
 
-        val newSlotStartTime = newSlot.time.dateTime
-        val newSlotEndTime = newSlot.endDateTime
+        val newSlotStartTime = newSlot.time.epochMillis
+        val newSlotEndTime = newSlot.endEpochMillis
 
         if (doctorAvailability.any {
-                val existingSlotStartTime = it.time.dateTime
-                val existingSlotEndTime = it.endDateTime
+                val existingSlotStartTime = it.time.epochMillis
+                val existingSlotEndTime = it.endEpochMillis
 
                 newSlotStartTime < existingSlotEndTime
                         && existingSlotStartTime < newSlotEndTime
@@ -88,9 +78,9 @@ class DefaultDoctorAvailabilityService(
         doctorAvailability: List<Slot>,
         slot: Slot,
         ) {
-        if (doctorAvailability.any { it.time == slot.time }) {
+        if (doctorAvailability.any { it.time.epochMillis == slot.time.epochMillis }) {
             throw UnavailableSlotException.SlotAlreadyExistException(
-                slot.time.dateTimeString
+                slot.time.format()
             )
         }
     }

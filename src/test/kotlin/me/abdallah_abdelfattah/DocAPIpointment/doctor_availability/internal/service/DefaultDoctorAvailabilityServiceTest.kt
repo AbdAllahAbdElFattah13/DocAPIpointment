@@ -8,13 +8,20 @@ import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.mode
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.models.Slot
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.repository.DoctorSlotRepository
 import me.abdallah_abdelfattah.DocAPIpointment.shared.*
+import me.abdallah_abdelfattah.DocAPIpointment.shared.models.FutureDate
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.kotlin.*
+import java.time.Clock
 import kotlin.test.Test
 
 class DefaultDoctorAvailabilityServiceTest {
 
+    private val now = Clock.systemUTC().instant().toEpochMilli()
+
+    private val futureDate = FutureDate.fromEpochMillis(
+        now.plus(mintToMillis(24 * 60))
+    )
     private val responseSlot: ResponseSlot = mock()
     private val slot = Slot(
         doctorId = DEFAULT_DOCTOR.id,
@@ -33,7 +40,6 @@ class DefaultDoctorAvailabilityServiceTest {
     private val service = DefaultDoctorAvailabilityService(
         repo,
         slotMapper,
-        TimeProviderStud(),
     )
 
     @BeforeEach
@@ -66,14 +72,14 @@ class DefaultDoctorAvailabilityServiceTest {
 
         service.addDoctorSlot(
             doctorId = DEFAULT_DOCTOR.id.value,
-            slotStartDateTimeValue = futureDate.dateTimeString,
+            slotStartEpochTime = futureDate.epochMillis.toString(),
             costValue = cost.value,
         )
 
         verify(repo, times(1)).addDoctorSlot(slotCaptor.capture())
         val capturedSlot = slotCaptor.firstValue
         assertThat(capturedSlot.doctorId).isEqualTo(DEFAULT_DOCTOR.id)
-        assertThat(capturedSlot.time.dateTimeString).isEqualTo(futureDate.dateTimeString)
+        assertThat(capturedSlot.time.epochMillis).isEqualTo(futureDate.epochMillis)
         assertThat(capturedSlot.cost.value).isEqualTo(cost.value)
     }
 
@@ -86,17 +92,17 @@ class DefaultDoctorAvailabilityServiceTest {
         assertThatExceptionOfType(UnavailableSlotException.SlotAlreadyExistException::class.java).isThrownBy {
             service.addDoctorSlot(
                 doctorId = DEFAULT_DOCTOR.id.value,
-                slotStartDateTimeValue = futureDate.dateTimeString,
+                slotStartEpochTime = futureDate.epochMillis.toString(),
                 costValue = cost.value,
             )
-        }.withMessage("Another Slot with the same time: ${futureDate.dateTimeString} is already exist")
+        }.withMessage("Another Slot with the same time: ${futureDate.format()} is already exist")
 
     }
 
     @Test
     fun `assertNoOverlapInSlots should throw SlotOverlapAnotherSlotException when overlapping occurred 1`() {
-        val futureDatePlus10Mints = futureDate.copy(
-            dateTimeString = "25/1/2011 20:10"
+        val futureDatePlus10Mints = FutureDate.fromEpochMillis(
+            futureDate.epochMillis.plus(mintToMillis(10))
         )
         val doctorAvailability = listOf(slot)
         val newSlot = Slot(
@@ -115,13 +121,13 @@ class DefaultDoctorAvailabilityServiceTest {
 
     @Test
     fun `assertNoOverlapInSlots should throw SlotOverlapAnotherSlotException when overlapping occurred 2`() {
-        val futureDateMinus1Hour = futureDate.copy(
-            dateTimeString = "25/1/2011 19:00"
+        val futureDateMinus30Mints = FutureDate.fromEpochMillis(
+            futureDate.epochMillis.minus(mintToMillis(30))
         )
         val doctorAvailability = listOf(slot)
         val newSlot = Slot(
             doctorId = DEFAULT_DOCTOR.id,
-            time = futureDateMinus1Hour,
+            time = futureDateMinus30Mints,
             cost = cost
         )
 
@@ -135,8 +141,8 @@ class DefaultDoctorAvailabilityServiceTest {
 
     @Test
     fun `assertNoOverlapInSlots should throw SlotOverlapAnotherSlotException when overlapping occurred 3`() {
-        val futureDatePlus10Mints = futureDate.copy(
-            dateTimeString = "25/1/2011 20:30"
+        val futureDatePlus10Mints = FutureDate.fromEpochMillis(
+            futureDate.epochMillis.minus(mintToMillis(10))
         )
         val doctorAvailability = listOf(slot)
         val newSlot = Slot(
@@ -156,13 +162,13 @@ class DefaultDoctorAvailabilityServiceTest {
 
     @Test
     fun `assertNoOverlapInSlots should not throw for none overlapping slots`() {
-        val futureDatePlus10Mints = futureDate.copy(
-            dateTimeString = "25/1/2011 18:00"
+        val futureDatePlus1Day =FutureDate.fromEpochMillis(
+            futureDate.epochMillis.plus(mintToMillis(24 * 60))
         )
         val doctorAvailability = listOf(slot)
         val newSlot = Slot(
             doctorId = DEFAULT_DOCTOR.id,
-            time = futureDatePlus10Mints,
+            time = futureDatePlus1Day,
             cost = cost
         )
 

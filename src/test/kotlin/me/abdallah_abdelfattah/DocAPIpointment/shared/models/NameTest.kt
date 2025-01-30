@@ -1,6 +1,5 @@
 package me.abdallah_abdelfattah.DocAPIpointment.shared.models
 
-import me.abdallah_abdelfattah.DocAPIpointment.shared.models.Name
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*

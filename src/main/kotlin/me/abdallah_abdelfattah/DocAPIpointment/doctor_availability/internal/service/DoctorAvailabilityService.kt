@@ -8,7 +8,7 @@ interface DoctorAvailabilityService {
 
     fun addDoctorSlot(
         doctorId: String,
-        slotStartDateTimeValue: String,
+        slotStartEpochTime: String,
         costValue: String,
     )
 }

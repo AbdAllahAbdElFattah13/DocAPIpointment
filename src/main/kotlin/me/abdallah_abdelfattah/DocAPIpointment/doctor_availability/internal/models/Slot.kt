@@ -2,7 +2,6 @@ package me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.mod
 
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.FutureDate
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.GUID
-import java.time.LocalDateTime
 
 data class Slot(
     val id: GUID = GUID(),
@@ -13,7 +12,7 @@ data class Slot(
     val isReserved: Boolean = false,
 ) {
     private val minDuration = 15
-    val endDateTime: LocalDateTime =  time.dateTime.plusMinutes(durationInMinutes.toLong())
+    val endEpochMillis: Long =  time.epochMillis + durationInMinutes * 60 * 1000
 
     init {
         require(durationInMinutes >= minDuration) { "Slot: Duration must be greater than $minDuration" }
