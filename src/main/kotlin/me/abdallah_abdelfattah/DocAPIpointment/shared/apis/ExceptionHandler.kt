@@ -1,4 +1,4 @@
-package me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.controller
+package me.abdallah_abdelfattah.DocAPIpointment.shared.apis
 
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.UnavailableSlotException
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.UnknownDoctorException
@@ -19,6 +19,7 @@ class ExceptionHandler {
         UnavailableSlotException.SlotAlreadyExistException::class,
         UnavailableSlotException.SlotOverlapAnotherSlotException::class,
         UnavailableSlotException.SlotAlreadyReservedException::class,
+        UnknownSlotException::class,
     ])
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleBadRequestExceptions(ex: RuntimeException): ResponseEntity<String> {

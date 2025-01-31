@@ -8,4 +8,7 @@ interface DoctorSlotRepository {
     fun getDoctor(doctorId: GUID): Doctor
     fun getDoctorAvailability(doctor: Doctor): List<Slot>
     fun addDoctorSlot(slot: Slot)
+    fun getAllDoctorsAvailability(): List<Slot>
+    fun getSlotById(slotId: String): Slot?
+    fun updateSlot(slotId: String, slot: Slot)
 }

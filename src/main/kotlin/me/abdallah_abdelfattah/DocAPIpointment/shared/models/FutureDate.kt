@@ -34,6 +34,10 @@ class FutureDate private constructor(
             return fromInstant(Instant.ofEpochMilli(parsedEpochMillis), clock)
         }
 
+        fun now(clock: Clock = Clock.systemUTC()): FutureDate {
+            return fromInstant(clock.instant(), clock)
+        }
+
         fun parse(dateStr: String, pattern: String = "d/M/yyyy H:mm"): FutureDate {
             val formatter = DateTimeFormatter.ofPattern(pattern)
                 .withZone(UTC_ZONE)

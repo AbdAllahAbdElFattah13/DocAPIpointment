@@ -1,6 +1,6 @@
 package me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.controller
 
-import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.Constants
+import me.abdallah_abdelfattah.DocAPIpointment.shared.apis.Constants
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.controller.dto.GetDoctorAvailabilityServiceResponse
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.service.DoctorAvailabilityService
 import org.springframework.web.bind.annotation.GetMapping
