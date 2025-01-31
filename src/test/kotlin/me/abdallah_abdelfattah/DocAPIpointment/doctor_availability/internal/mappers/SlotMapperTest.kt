@@ -6,6 +6,7 @@ import me.abdallah_abdelfattah.DocAPIpointment.shared.cost
 import me.abdallah_abdelfattah.DocAPIpointment.shared.futureDateEpoch
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.FutureDate
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.GUID
+import me.abdallah_abdelfattah.DocAPIpointment.shared.SharedModelsMapping
 import me.abdallah_abdelfattah.DocAPIpointment.shared.nowEpoch
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -16,6 +17,10 @@ import java.time.Instant
 
 class SlotMapperTest {
 
+    private val slotMapper: SlotMapper = SlotMapperImpl(
+        SharedModelsMapping(),
+        CostMapper()
+    )
     private val clock = mock<Clock> {
         on { instant() } doReturn Instant.ofEpochMilli(nowEpoch)
     }
@@ -27,7 +32,7 @@ class SlotMapperTest {
             doctorId = GUID(),
             time = FutureDate.fromEpochMillis(futureDateEpoch, clock),
             durationInMinutes = 30,
-            isReserved = false,
+            reserved = true,
             cost = cost,
         )
 
@@ -35,11 +40,11 @@ class SlotMapperTest {
             id = slot.id.value,
             time = slot.time.epochMillis.toString(),
             durationInMinutes = slot.durationInMinutes,
-            isReserved = slot.isReserved,
+            reserved = slot.reserved,
             cost = slot.cost.value,
         )
 
-        assertEquals(responseSlot, SlotMapper().toResponseSlot(slot))
+        assertEquals(responseSlot, slotMapper.toResponseSlot(slot))
     }
 
     @Test
@@ -49,7 +54,7 @@ class SlotMapperTest {
             doctorId = GUID(),
             time = FutureDate.fromEpochMillis(futureDateEpoch, clock),
             durationInMinutes = 30,
-            isReserved = false,
+            reserved = false,
             cost = cost,
         )
 
@@ -57,13 +62,13 @@ class SlotMapperTest {
             id = slot.id.value,
             time = slot.time.epochMillis.toString(),
             durationInMinutes = slot.durationInMinutes,
-            isReserved = slot.isReserved,
+            reserved = slot.reserved,
             cost = slot.cost.value,
         )
 
         assertEquals(
             listOf(responseSlot),
-            SlotMapper().toResponseSlots(listOf(slot))
+            slotMapper.toResponseSlots(listOf(slot))
         )
     }
 

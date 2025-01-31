@@ -22,17 +22,17 @@ class SlotTest {
     )
 
     @Test
-    fun `reserve should return a new Slot with isReserved set to true`() {
+    fun `reserve should return a new Slot with reserved set to true`() {
         val slot = Slot(
             doctorId = GUID(),
             time = time,
-            isReserved = false,
+            reserved = false,
             cost = Cost.fromNumber(100.0)
         )
 
         val reservedSlot = slot.reserve()
 
-        assertTrue(reservedSlot.isReserved)
+        assertTrue(reservedSlot.reserved)
     }
 
     @Test
@@ -40,7 +40,7 @@ class SlotTest {
         val slot = Slot(
             doctorId = GUID(),
             time = time,
-            isReserved = false,
+            reserved = false,
             cost = Cost.fromNumber(100.0),
             durationInMinutes = 60
         )
@@ -59,7 +59,7 @@ class SlotTest {
             Slot(
                 doctorId = GUID(),
                 time = time,
-                isReserved = false,
+                reserved = false,
                 cost = Cost.fromNumber(100.0),
                 durationInMinutes = 10
             )
@@ -72,7 +72,7 @@ class SlotTest {
             Slot(
                 doctorId = GUID(),
                 time = time,
-                isReserved = false,
+                reserved = false,
                 cost = Cost.fromNumber(100.0),
                 durationInMinutes = 15
             )

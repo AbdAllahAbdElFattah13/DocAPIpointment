@@ -5,7 +5,7 @@ data class ResponseSlot(
     val id: String,
     val time: String,
     val durationInMinutes: Int,
-    val isReserved: Boolean,
+    val reserved: Boolean,
     val cost: String
 )
 

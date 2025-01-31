@@ -3,6 +3,7 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.4.1"
 	id("io.spring.dependency-management") version "1.1.7"
+	kotlin("kapt") version "1.9.25"
 }
 
 group = "me.abdallah_abdelfattah"
@@ -17,6 +18,14 @@ java {
 repositories {
 	mavenCentral()
 }
+
+kapt {
+	arguments {
+		arg("mapstruct.defaultComponentModel", "spring")
+		arg("mapstruct.nullValueCheckStrategy", "ALWAYS")
+	}
+}
+
 
 extra["springModulithVersion"] = "1.3.1"
 
@@ -36,7 +45,7 @@ dependencies {
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-	annotationProcessor ("org.mapstruct:mapstruct-processor:1.6.3")
+	kapt ("org.mapstruct:mapstruct-processor:1.6.3")
 }
 
 dependencyManagement {

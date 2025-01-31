@@ -2,23 +2,19 @@ package me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.map
 
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.controller.dto.ResponseSlot
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.models.Slot
-import org.springframework.stereotype.Component
+import me.abdallah_abdelfattah.DocAPIpointment.shared.SharedModelsMapping
+import org.mapstruct.InjectionStrategy
+import org.mapstruct.Mapper
+import org.mapstruct.Mapping
 
-@Component
-class SlotMapper {
+@Mapper(
+    componentModel = "spring",
+    uses = [SharedModelsMapping::class, CostMapper::class],
+    injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+    )
+interface SlotMapper {
+    @Mapping(target = "time", source = "time", qualifiedByName = ["mapTimeToEpoch"])
+    fun toResponseSlot(slot: Slot): ResponseSlot
 
-    fun toResponseSlot(slot: Slot): ResponseSlot {
-        return ResponseSlot(
-            id=slot.id.value,
-            time=slot.time.epochMillis.toString(),
-            durationInMinutes = slot.durationInMinutes,
-            isReserved = slot.isReserved,
-            cost = slot.cost.value,
-        )
-    }
-
-    fun toResponseSlots(slots: List<Slot>): List<ResponseSlot> {
-        return slots.map { toResponseSlot(it) }
-    }
-
+    fun toResponseSlots(slots: List<Slot>): List<ResponseSlot>
 }

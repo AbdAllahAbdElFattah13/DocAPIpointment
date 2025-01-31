@@ -9,7 +9,7 @@ data class Slot(
     val time: FutureDate,
     val cost: Cost,
     val durationInMinutes: Int = 2*60,
-    val isReserved: Boolean = false,
+    val reserved: Boolean = false,
 ) {
     private val minDuration = 15
     val endEpochMillis: Long =  time.epochMillis + durationInMinutes * 60 * 1000
@@ -18,5 +18,5 @@ data class Slot(
         require(durationInMinutes >= minDuration) { "Slot: Duration must be greater than $minDuration" }
     }
 
-    fun reserve() = copy(isReserved = true)
+    fun reserve() = copy(reserved = true)
 }
