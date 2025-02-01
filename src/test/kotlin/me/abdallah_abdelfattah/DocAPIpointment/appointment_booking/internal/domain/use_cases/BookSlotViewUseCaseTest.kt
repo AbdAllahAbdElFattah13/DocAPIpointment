@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
 
-class BookSlotUseCaseTest {
+class BookSlotViewUseCaseTest {
 
     private val doctorAvailabilityGateway: DoctorAvailabilityGateway = mock()
     private val patientRepository: PatientRepository = mock()

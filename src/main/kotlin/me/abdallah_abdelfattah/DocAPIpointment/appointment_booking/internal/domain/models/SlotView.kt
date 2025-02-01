@@ -1,6 +1,6 @@
 package me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models
 
-data class Slot(
+data class SlotView(
     val id: String,
     val doctorId: String,
     val startTimeEpoch: Long,
