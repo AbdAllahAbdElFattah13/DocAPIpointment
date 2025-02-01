@@ -1,6 +1,7 @@
 package me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.use_cases
 
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.gateways.DoctorAvailabilityGateway
+import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.gateways.NotificationGateway
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.Appointment
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.AppointmentStatus
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.Patient
@@ -20,6 +21,7 @@ class BookSlotViewUseCaseTest {
     private val doctorAvailabilityGateway: DoctorAvailabilityGateway = mock()
     private val patientRepository: PatientRepository = mock()
     private val appointmentRepository: AppointmentRepository = mock()
+    private val notificationGateway: NotificationGateway = mock()
 
     private val mockGUID = "6c80f42d-ab54-44b6-a69b-3b5e2a3107e1"
 
@@ -44,6 +46,7 @@ class BookSlotViewUseCaseTest {
             doctorAvailabilityGateway,
             patientRepository,
             appointmentRepository,
+            notificationGateway,
         )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
@@ -65,6 +68,7 @@ class BookSlotViewUseCaseTest {
             doctorAvailabilityGateway,
             patientRepository,
             appointmentRepository,
+            notificationGateway,
         )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
@@ -96,6 +100,7 @@ class BookSlotViewUseCaseTest {
             doctorAvailabilityGateway,
             patientRepository,
             appointmentRepository,
+            notificationGateway,
         )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
@@ -127,6 +132,7 @@ class BookSlotViewUseCaseTest {
             doctorAvailabilityGateway,
             patientRepository,
             appointmentRepository,
+            notificationGateway,
         )
 
         assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
@@ -163,11 +169,19 @@ class BookSlotViewUseCaseTest {
             doctorAvailabilityGateway,
             patientRepository,
             appointmentRepository,
+            notificationGateway,
         )
 
         bookSlotUseCase.run(patientId, slotId)
 
         verify(appointmentRepository, times(1)).save(appointmentCaptor.capture())
+        verify(notificationGateway, times(1)).notifyNewAppointment(
+            slotId = slotId,
+            patientId = patientId,
+            patientName = patient.name.value,
+            doctorId = doctorId,
+            appointmentTimeEpoch = slotDTO.startTimeEpoch,
+        )
         val capturedAppointment = appointmentCaptor.firstValue
         assertThat(capturedAppointment.id).isNotNull
         assertThat(capturedAppointment.patient).isEqualTo(patient)

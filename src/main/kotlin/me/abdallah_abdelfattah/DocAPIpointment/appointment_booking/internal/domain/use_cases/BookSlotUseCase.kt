@@ -1,6 +1,7 @@
 package me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.use_cases
 
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.gateways.DoctorAvailabilityGateway
+import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.gateways.NotificationGateway
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.Appointment
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.repositories.AppointmentRepository
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.repositories.PatientRepository
@@ -13,6 +14,7 @@ class BookSlotUseCase(
     private val doctorAvailabilityGateway: DoctorAvailabilityGateway,
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
+    private val notificationGateway: NotificationGateway,
 ) {
     fun run(
         patientId: String,
@@ -39,7 +41,13 @@ class BookSlotUseCase(
             )
         )
 
-        //TODO: send notification, either via bus or direct call.
+        notificationGateway.notifyNewAppointment(
+            slotId = slotId,
+            patientId = patientId,
+            patientName = patient.name.value,
+            doctorId = slot.doctorId,
+            appointmentTimeEpoch = slot.startTimeEpoch,
+        )
 
     }
 }

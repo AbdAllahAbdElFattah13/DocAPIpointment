@@ -163,4 +163,22 @@ class InMemoryDoctorSlotRepositoryTest {
         }
     }
 
+    @Test
+    fun `assert doctor by id`() {
+        val repository = InMemoryDoctorSlotRepository(mock())
+
+        val doctor = repository.getDoctorById(DEFAULT_DOCTOR.id.value)
+
+        assertEquals(DEFAULT_DOCTOR, doctor)
+    }
+
+    @Test
+    fun `assert doctor by id - not found`() {
+        val repository = InMemoryDoctorSlotRepository(mock())
+
+        val doctor = repository.getDoctorById(GUID().value)
+
+        assertNull(doctor)
+    }
+
 }

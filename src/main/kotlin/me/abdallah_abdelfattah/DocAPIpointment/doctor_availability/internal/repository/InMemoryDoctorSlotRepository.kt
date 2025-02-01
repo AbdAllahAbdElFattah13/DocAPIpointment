@@ -25,6 +25,10 @@ class InMemoryDoctorSlotRepository(
         return doctors.firstOrNull { it.id == doctorId } ?: throw UnknownDoctorException(doctorId)
     }
 
+    override fun getDoctorById(doctorId: String): Doctor? {
+        return doctors.firstOrNull { it.id.value == doctorId }
+    }
+
     override fun getDoctorAvailability(doctor: Doctor): List<Slot> {
         return slots.filter { it.doctorId == doctor.id }
     }

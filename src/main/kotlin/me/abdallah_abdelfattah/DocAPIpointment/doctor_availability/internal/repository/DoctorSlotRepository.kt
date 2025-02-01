@@ -6,6 +6,7 @@ import me.abdallah_abdelfattah.DocAPIpointment.shared.models.GUID
 
 interface DoctorSlotRepository {
     fun getDoctor(doctorId: GUID): Doctor
+    fun getDoctorById(doctorId: String): Doctor?
     fun getDoctorAvailability(doctor: Doctor): List<Slot>
     fun addDoctorSlot(slot: Slot)
     fun getAllDoctorsAvailability(): List<Slot>

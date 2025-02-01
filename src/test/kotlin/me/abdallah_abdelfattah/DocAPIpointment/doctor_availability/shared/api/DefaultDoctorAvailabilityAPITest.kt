@@ -1,8 +1,11 @@
 package me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.shared.api
 
+import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.mappers.DoctorMapper
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.mappers.SlotMapper
+import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.models.Doctor
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.models.Slot
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.internal.repository.DoctorSlotRepository
+import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.shared.dtos.DoctorDTO
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.shared.dtos.SlotDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -14,13 +17,20 @@ class DefaultDoctorAvailabilityAPITest {
     private val slot: Slot = mock()
     private val slotDTO: SlotDTO = mock()
 
+    private val doctor: Doctor = mock()
+    private val doctorDTO: DoctorDTO = mock()
+
     private val doctorSlotRepository: DoctorSlotRepository = mock()
     private val slotMapper: SlotMapper = mock {
         on { toSlotDTO(slot) } doReturn slotDTO
     }
+    private val doctorMapper: DoctorMapper = mock {
+        on { toDoctorDTO(doctor) } doReturn doctorDTO
+    }
     private val defaultDoctorAvailabilityAPI = DefaultDoctorAvailabilityAPI(
         doctorSlotRepository,
         slotMapper,
+        doctorMapper,
     )
 
     @BeforeEach
@@ -69,6 +79,14 @@ class DefaultDoctorAvailabilityAPITest {
         whenever(doctorSlotRepository.getSlotById(slotId)).thenReturn(reservedSlot)
         val result = defaultDoctorAvailabilityAPI.reserveSlot(slotId)
         assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `getDoctorInfo returns the repo equivalent mapped to dto`() {
+        val doctorId = "doctorId"
+        whenever(doctorSlotRepository.getDoctorById(doctorId)).thenReturn(doctor)
+        val expectedDoctorDTO = defaultDoctorAvailabilityAPI.getDoctorInfo(doctorId)
+        assertThat(expectedDoctorDTO).isEqualTo(doctorDTO)
     }
 
 }
