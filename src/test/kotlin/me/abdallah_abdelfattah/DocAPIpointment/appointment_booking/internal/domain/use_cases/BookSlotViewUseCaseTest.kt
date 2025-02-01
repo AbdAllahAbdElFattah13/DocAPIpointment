@@ -4,9 +4,9 @@ import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.doma
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.Appointment
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.AppointmentStatus
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.Patient
+import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.SlotView
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.repositories.AppointmentRepository
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.repositories.PatientRepository
-import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.shared.dtos.SlotDTO
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.GUID
 import me.abdallah_abdelfattah.DocAPIpointment.shared.models.Name
 import org.assertj.core.api.Assertions.assertThat
@@ -80,7 +80,7 @@ class BookSlotViewUseCaseTest {
         val slotId = "slotId"
         val doctorId = "doctorId"
 
-        val slotDTO = SlotDTO(
+        val slotView = SlotView(
             id = slotId,
             doctorId = doctorId,
             startTimeEpoch = 0,
@@ -90,7 +90,7 @@ class BookSlotViewUseCaseTest {
         )
 
         whenever(patientRepository.findById(patientId)).thenReturn(mock())
-        whenever(doctorAvailabilityGateway.getSlotById(slotId)).thenReturn(slotDTO)
+        whenever(doctorAvailabilityGateway.getSlotById(slotId)).thenReturn(slotView)
 
         val bookSlotUseCase = BookSlotUseCase(
             doctorAvailabilityGateway,
@@ -110,7 +110,7 @@ class BookSlotViewUseCaseTest {
         val slotId = "slotId"
         val doctorId = "doctorId"
 
-        val slotDTO = SlotDTO(
+        val slotView = SlotView(
             id = slotId,
             doctorId = doctorId,
             startTimeEpoch = 0,
@@ -120,7 +120,7 @@ class BookSlotViewUseCaseTest {
         )
 
         whenever(patientRepository.findById(patientId)).thenReturn(mock())
-        whenever(doctorAvailabilityGateway.getSlotById(slotId)).thenReturn(slotDTO)
+        whenever(doctorAvailabilityGateway.getSlotById(slotId)).thenReturn(slotView)
         whenever(doctorAvailabilityGateway.reserveSlot(slotId)).thenReturn(false)
 
         val bookSlotUseCase = BookSlotUseCase(
@@ -146,7 +146,7 @@ class BookSlotViewUseCaseTest {
             id = GUID(patientId),
             name = Name("Patient Name"),
         )
-        val slotDTO = SlotDTO(
+        val slotView = SlotView(
             id = slotId,
             doctorId = doctorId,
             startTimeEpoch = 0,
@@ -156,7 +156,7 @@ class BookSlotViewUseCaseTest {
         )
 
         whenever(patientRepository.findById(patientId)).thenReturn(patient)
-        whenever(doctorAvailabilityGateway.getSlotById(slotId)).thenReturn(slotDTO)
+        whenever(doctorAvailabilityGateway.getSlotById(slotId)).thenReturn(slotView)
         whenever(doctorAvailabilityGateway.reserveSlot(slotId)).thenReturn(true)
 
         val bookSlotUseCase = BookSlotUseCase(
@@ -171,8 +171,8 @@ class BookSlotViewUseCaseTest {
         val capturedAppointment = appointmentCaptor.firstValue
         assertThat(capturedAppointment.id).isNotNull
         assertThat(capturedAppointment.patient).isEqualTo(patient)
-        assertThat(capturedAppointment.doctorId).isEqualTo(GUID(slotDTO.doctorId))
-        assertThat(capturedAppointment.slotId).isEqualTo(GUID(slotDTO.id))
+        assertThat(capturedAppointment.doctorId).isEqualTo(GUID(slotView.doctorId))
+        assertThat(capturedAppointment.slotId).isEqualTo(GUID(slotView.id))
         assertThat(capturedAppointment.reservedAtEpoch).isNotNull
         assertThat(capturedAppointment.createdAtEpoch).isNotNull
         assertThat(capturedAppointment.status).isEqualTo(AppointmentStatus.PENDING)

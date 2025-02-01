@@ -1,4 +1,4 @@
-package me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.mappers
+package me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.data.gateways.mappers
 
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.SlotView
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.shared.dtos.SlotDTO

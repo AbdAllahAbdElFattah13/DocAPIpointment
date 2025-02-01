@@ -1,6 +1,8 @@
 package me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.data.gateways
 
+import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.data.gateways.mappers.DoctorAvailabilityModelsMapper
 import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.gateways.DefaultDoctorAvailabilityGateway
+import me.abdallah_abdelfattah.DocAPIpointment.appointment_booking.internal.domain.models.SlotView
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.shared.api.DoctorAvailabilityAPI
 import me.abdallah_abdelfattah.DocAPIpointment.doctor_availability.shared.dtos.SlotDTO
 import org.assertj.core.api.Assertions.assertThat
@@ -11,7 +13,13 @@ import org.mockito.kotlin.*
 class DefaultDoctorAvailabilityGatewayTest {
 
     private val api = mock<DoctorAvailabilityAPI>()
-    private val gateway = DefaultDoctorAvailabilityGateway(api)
+    private val slotDTO: SlotDTO = mock()
+    private val slotView: SlotView = mock()
+    private val mapper: DoctorAvailabilityModelsMapper = mock {
+        on { mapToSlot(slotDTO) } doReturn slotView
+    }
+
+    private val gateway = DefaultDoctorAvailabilityGateway(api, mapper)
 
     @BeforeEach
     fun setUp() {
@@ -20,8 +28,8 @@ class DefaultDoctorAvailabilityGatewayTest {
 
     @Test
     fun `getAllDoctorsAvailableSlots should return the same results as provided by API`() {
-        val expected: List<SlotDTO> = mock()
-        whenever(api.getAllDoctorsAvailability()).thenReturn(expected)
+        val expected: List<SlotView> = listOf(slotView)
+        whenever(api.getAllDoctorsAvailability()).thenReturn(listOf(slotDTO))
 
         val result = gateway.getAllDoctorsAvailableSlots()
 
@@ -32,13 +40,12 @@ class DefaultDoctorAvailabilityGatewayTest {
     @Test
     fun `getSlotById should return return the same results as provided by API`() {
         val slotId = "slotId"
-        val expected: SlotDTO = mock()
-        whenever(api.getSlotById(slotId)).thenReturn(expected)
+        whenever(api.getSlotById(slotId)).thenReturn(slotDTO)
 
         val result = gateway.getSlotById(slotId)
 
         verify(api, times(1)).getSlotById(slotId)
-        assertThat(result).isEqualTo(expected)
+        assertThat(result).isEqualTo(slotView)
 
     }
 
