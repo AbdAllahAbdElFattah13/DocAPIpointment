@@ -155,8 +155,8 @@ class BookSlotViewUseCaseTest {
         val slotView = SlotView(
             id = slotId,
             doctorId = doctorId,
-            startTimeEpoch = 0,
-            endTimeEpoch = 0,
+            startTimeEpoch = 13944139,
+            endTimeEpoch = 13850033,
             reserved = false,
             cost = "0",
         )
@@ -180,7 +180,7 @@ class BookSlotViewUseCaseTest {
             patientId = patientId,
             patientName = patient.name.value,
             doctorId = doctorId,
-            appointmentTimeEpoch = slotDTO.startTimeEpoch,
+            appointmentTimeEpoch = slotView.startTimeEpoch,
         )
         val capturedAppointment = appointmentCaptor.firstValue
         assertThat(capturedAppointment.id).isNotNull
@@ -189,8 +189,10 @@ class BookSlotViewUseCaseTest {
         assertThat(capturedAppointment.slotId).isEqualTo(GUID(slotView.id))
         assertThat(capturedAppointment.reservedAtEpoch).isNotNull
         assertThat(capturedAppointment.createdAtEpoch).isNotNull
-        assertThat(capturedAppointment.status).isEqualTo(AppointmentStatus.PENDING)
+        assertThat(capturedAppointment.status).isEqualTo(AppointmentStatus.OPENED)
         assertThat(capturedAppointment.lastUpdatedAtEpoch).isNull()
+        assertThat(capturedAppointment.startTimeEpoch).isEqualTo(slotView.startTimeEpoch)
+        assertThat(capturedAppointment.endTimeEpoch).isEqualTo(slotView.endTimeEpoch)
     }
 
 }

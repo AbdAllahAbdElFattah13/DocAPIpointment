@@ -6,4 +6,8 @@ interface AppointmentRepository {
     fun save(appointment: Appointment)
     fun findById(id: String): Appointment?
     fun update(id: String, newAppointment: Appointment)
+    fun getUpcomingAppointmentsByDoctorId(
+        doctorId: String,
+        nowEpochMilli: Long,
+    ): List<Appointment>
 }

@@ -36,6 +36,8 @@ class BookSlotUseCase(
                 id = GUID(),
                 patient = patient,
                 doctorId = GUID(slot.doctorId),
+                startTimeEpoch = slot.startTimeEpoch,
+                endTimeEpoch = slot.endTimeEpoch,
                 slotId = GUID(slot.id),
                 reservedAtEpoch = Instant.now().toEpochMilli(),
             )

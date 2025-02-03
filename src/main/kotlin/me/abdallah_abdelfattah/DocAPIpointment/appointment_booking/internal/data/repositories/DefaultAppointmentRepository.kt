@@ -19,4 +19,13 @@ class DefaultAppointmentRepository : AppointmentRepository {
     override fun update(id: String, newAppointment: Appointment) {
         appointments[id] = newAppointment
     }
+
+    override fun getUpcomingAppointmentsByDoctorId(
+        doctorId: String,
+        nowEpochMilli: Long,
+    ): List<Appointment> {
+        return appointments.values.filter {
+            it.doctorId.value == doctorId && it.startTimeEpoch > nowEpochMilli
+        }
+    }
 }

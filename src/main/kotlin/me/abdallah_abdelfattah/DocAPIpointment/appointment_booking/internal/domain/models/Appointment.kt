@@ -7,8 +7,10 @@ data class Appointment(
     val id: GUID = GUID(),
     val doctorId: GUID,
     val slotId: GUID,
+    val startTimeEpoch: Long,
+    val endTimeEpoch: Long,
     val patient: Patient,
-    val status: AppointmentStatus = AppointmentStatus.PENDING,
+    val status: AppointmentStatus = AppointmentStatus.OPENED,
     val lastUpdatedAtEpoch: Long? = null,
     val reservedAtEpoch: Long? = null,
     val createdAtEpoch: Long = Clock.systemUTC().instant().toEpochMilli(),
@@ -19,6 +21,6 @@ data class Appointment(
     )
 
     fun cancel() = updateStatus(status = AppointmentStatus.CANCELLED)
-    fun confirm() = updateStatus(status = AppointmentStatus.CONFIRMED)
     fun complete() = updateStatus(status = AppointmentStatus.COMPLETED)
+    fun reopen() = updateStatus(status = AppointmentStatus.OPENED)
 }

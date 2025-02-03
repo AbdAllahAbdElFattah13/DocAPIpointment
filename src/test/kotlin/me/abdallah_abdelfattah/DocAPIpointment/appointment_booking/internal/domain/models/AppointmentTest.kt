@@ -13,6 +13,8 @@ class AppointmentTest {
             doctorId = GUID(),
             slotId = GUID(),
             patient = Patient(name = Name("John Doe")),
+            startTimeEpoch = 1,
+            endTimeEpoch = 2,
         )
 
         val cancelledAppointment = appointment.cancel()
@@ -23,26 +25,13 @@ class AppointmentTest {
     }
 
     @Test
-    fun `confirm appointment`() {
-        val appointment = Appointment(
-            doctorId = GUID(),
-            slotId = GUID(),
-            patient = Patient(name = Name("John Doe")),
-        )
-
-        val confirmedAppointment = appointment.confirm()
-
-        assertThat(confirmedAppointment.status)
-            .isEqualTo(AppointmentStatus.CONFIRMED)
-        assertThat(confirmedAppointment.lastUpdatedAtEpoch).isNotNull
-    }
-
-    @Test
     fun `complete appointment`() {
         val appointment = Appointment(
             doctorId = GUID(),
             slotId = GUID(),
             patient = Patient(name = Name("John Doe")),
+            startTimeEpoch = 1,
+            endTimeEpoch = 2,
         )
 
         val completedAppointment = appointment.complete()
@@ -50,5 +39,22 @@ class AppointmentTest {
         assertThat(completedAppointment.status)
             .isEqualTo(AppointmentStatus.COMPLETED)
         assertThat(completedAppointment.lastUpdatedAtEpoch).isNotNull
+    }
+
+    @Test
+    fun `reopen appointment`() {
+        val appointment = Appointment(
+            doctorId = GUID(),
+            slotId = GUID(),
+            patient = Patient(name = Name("John Doe")),
+            startTimeEpoch = 1,
+            endTimeEpoch = 2,
+        )
+
+        val reopenedAppointment = appointment.reopen()
+
+        assertThat(reopenedAppointment.status)
+            .isEqualTo(AppointmentStatus.OPENED)
+        assertThat(reopenedAppointment.lastUpdatedAtEpoch).isNotNull
     }
 }

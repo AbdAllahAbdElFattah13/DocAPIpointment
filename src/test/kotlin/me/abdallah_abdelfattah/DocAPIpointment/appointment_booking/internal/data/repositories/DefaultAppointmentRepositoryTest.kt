@@ -16,6 +16,8 @@ class DefaultAppointmentRepositoryTest {
     private val doctorId = GUID("6c26cc8b-6f02-4e06-8c02-a070388934c4")
     private val slotId = GUID("6c26cc8b-6f02-4e06-8c02-a070388934c3")
     private val appointmentId = GUID("6c26cc8b-6f02-4e06-8c02-a070388934c2")
+    private val startTimeEpoch = 1321300000000L
+    private val endTimeEpoch = 14200930000000L
 
     @Test
     fun `should save the appointment`() {
@@ -24,6 +26,8 @@ class DefaultAppointmentRepositoryTest {
             patient = patient,
             doctorId = doctorId,
             slotId = slotId,
+            startTimeEpoch = startTimeEpoch,
+            endTimeEpoch = endTimeEpoch,
         )
         val repository = DefaultAppointmentRepository()
 
@@ -51,6 +55,8 @@ class DefaultAppointmentRepositoryTest {
             patient = patient,
             doctorId = doctorId,
             slotId = slotId,
+            startTimeEpoch = startTimeEpoch,
+            endTimeEpoch = endTimeEpoch,
         )
         val repository = DefaultAppointmentRepository()
 
@@ -65,5 +71,41 @@ class DefaultAppointmentRepositoryTest {
 
         assertThat(updatedAppointment).isEqualTo(newAppointment)
 
+    }
+
+    @Test
+    fun `should get upcoming appointments by doctor id`() {
+        val repository = DefaultAppointmentRepository()
+        val nowEpochMilli = 1321300000000L
+        val appointment1StartTime = nowEpochMilli.minus(10000)
+        val appointment1EndTime = nowEpochMilli.plus(10000)
+        val appointment2StartTime = nowEpochMilli.plus(10000)
+        val appointment2EndTime = nowEpochMilli.plus(20000)
+
+        val appointment1 = Appointment(
+            id = appointmentId,
+            patient = patient,
+            doctorId = doctorId,
+            slotId = slotId,
+            startTimeEpoch = appointment1StartTime,
+            endTimeEpoch = appointment1EndTime,
+        )
+        val appointment2 = Appointment(
+            id = GUID(),
+            patient = patient,
+            doctorId = doctorId,
+            slotId = GUID(),
+            startTimeEpoch = appointment2StartTime,
+            endTimeEpoch = appointment2EndTime,
+        )
+        repository.save(appointment1)
+        repository.save(appointment2)
+
+        val upcomingAppointments = repository.getUpcomingAppointmentsByDoctorId(
+            doctorId.value,
+            nowEpochMilli,
+        )
+
+        assertThat(upcomingAppointments).containsExactly(appointment2)
     }
 }
