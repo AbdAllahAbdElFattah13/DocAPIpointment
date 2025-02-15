@@ -171,6 +171,8 @@ The API will return appropriate HTTP status codes:
 ## Future Improvements
 
 - Refactor the Adaptor in `Doctor Management Module` to include test coverage.
+- Update API Endpoint to better match RESTful conventions.
+- Standardize API responses.
 - Add test coverage reports.
 - Add integration tests.
 - Add create/update APIs for doctors and patients
