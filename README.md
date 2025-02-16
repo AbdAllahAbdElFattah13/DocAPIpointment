@@ -170,14 +170,14 @@ The API will return appropriate HTTP status codes:
 
 ## Future Improvements
 
-- Refactor the Adaptor in `Doctor Management Module` to include test coverage.
-- Update API Endpoint to better match RESTful conventions.
-- Standardize API responses.
-- Add test coverage reports.
-- Add integration tests.
-- Add create/update APIs for doctors and patients
-- Make slot duration configurable
-- Add pagination for listing endpoints
-- Add more comprehensive error handling
-- Add proper database integration
-- Unify assertion libraries used in tests for more consistency
+- [ ] Refactor the Adaptor in `Doctor Management Module` to include test coverage.
+- [ ] Update API Endpoint to better match RESTful conventions.
+- [ ] Standardize API responses.
+- [ ] Add integration tests.
+- [ ] Add test coverage reports.
+- [ ] Add create/update APIs for doctors and patients
+- [ ] Make slot duration configurable
+- [ ] Add pagination for listing endpoints
+- [ ] Add more comprehensive error handling
+- [ ] Add proper database integration
+- [ ] Unify assertion libraries used in tests for more consistency
