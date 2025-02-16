@@ -26,7 +26,7 @@ class UpdateAppointmentStatusController(
     ) {
         appointmentOperations.updateAppointmentStatus(
             request.appointmentId,
-            mapper.mapStatus(request.appointmentStatus)
+            mapper.mapStatusInRequest(request.appointmentStatus)
         )
     }
 }

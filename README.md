@@ -170,7 +170,7 @@ The API will return appropriate HTTP status codes:
 
 ## Future Improvements
 
-- [ ] Refactor the Adaptor in `Doctor Management Module` to include test coverage.
+- [x] Refactor the Adaptor in `Doctor Management Module` to include test coverage.
 - [ ] Update API Endpoint to better match RESTful conventions.
 - [ ] Standardize API responses.
 - [ ] Add integration tests.
